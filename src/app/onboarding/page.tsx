@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import {
@@ -154,6 +154,10 @@ export default function OnboardingPage() {
     const [currentStep, setCurrentStep] = useState(1);
     const [isRegistering, setIsRegistering] = useState(false);
 
+    // UNSTOPPABLE REDIRECT: Track if redirect has been initiated
+    const redirectInitiatedRef = useRef(false);
+    const failsafeTimerRef = useRef<NodeJS.Timeout | null>(null);
+
     // Form state
     const [formData, setFormData] = useState({
         name: "",
@@ -211,11 +215,14 @@ export default function OnboardingPage() {
         }
     };
 
-    // Analysis animation effect
+    // Analysis animation effect with UNSTOPPABLE REDIRECT
     useEffect(() => {
-        if (currentStep === 4 && !isRegistering) {
+        if (currentStep === 4 && !redirectInitiatedRef.current) {
+            console.log("🔵 ONBOARDING: Step 4 reached, initiating UNSTOPPABLE redirect sequence");
+            redirectInitiatedRef.current = true; // Mark as initiated - CANNOT be stopped now
             setIsRegistering(true);
 
+            // Animation interval
             const interval = setInterval(() => {
                 setAnalysisIndex((prev) => {
                     if (prev < analysisMessages.length - 1) {
@@ -225,11 +232,18 @@ export default function OnboardingPage() {
                 });
             }, 800);
 
-            // Register user after analysis animation
-            const timeout = setTimeout(async () => {
+            // UNSTOPPABLE FAILSAFE: Stored in ref so cleanup can't kill it
+            failsafeTimerRef.current = setTimeout(() => {
+                console.log("🔵 ONBOARDING: FAILSAFE executing - FORCING redirect with window.location");
+                // Use window.location as nuclear option - this ALWAYS works
+                window.location.href = "/";
+            }, 4500) as any;
+
+            // Try normal registration
+            setTimeout(async () => {
+                console.log("🔵 ONBOARDING: Attempting registration...");
                 setAnalysisComplete(true);
 
-                // Register via AuthContext (handles storage and login)
                 try {
                     await register({
                         name: formData.name,
@@ -240,23 +254,28 @@ export default function OnboardingPage() {
                         skills: formData.skills,
                         goals: formData.goals,
                     });
-                    // AuthContext register() handles redirect internally
+                    console.log("🔵 ONBOARDING: Registration SUCCESS - router.push will handle redirect");
+                    // If registration succeeds, AuthContext will redirect via router.push
+                    // Cancel failsafe since we don't need the nuclear option
+                    if (failsafeTimerRef.current) {
+                        clearTimeout(failsafeTimerRef.current);
+                        console.log("🔵 ONBOARDING: Cancelled failsafe (registration succeeded)");
+                    }
                 } catch (e) {
-                    console.error("Registration failed:", e);
-                    // Fallback: Even if registration fails, redirect to dashboard
-                    // (User can try logging in again)
-                    setTimeout(() => {
-                        router.push("/");
-                    }, 1000);
+                    console.error("🔴 ONBOARDING: Registration FAILED -", e);
+                    console.log("🔵 ONBOARDING: Failsafe will handle redirect in 4.5s total");
+                    // Don't do anything - failsafe will handle it
                 }
-            }, 3500);
+            }, 2500);
 
+            // Cleanup only stops animation, NOT the redirect
             return () => {
+                console.log("🔵 ONBOARDING: Cleaning up animation interval (redirect still active)");
                 clearInterval(interval);
-                clearTimeout(timeout);
+                // DO NOT clear failsafeTimerRef - it must run to completion
             };
         }
-    }, [currentStep, formData, register, isRegistering, router]);
+    }, [currentStep, formData, register, router]);
 
     // Navigation handlers
     const canProceed = () => {
