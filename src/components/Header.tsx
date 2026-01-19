@@ -1,6 +1,7 @@
 "use client";
 
-import { Search, Bell, Menu, Crown } from "lucide-react";
+import Link from "next/link";
+import { Search, Bell, Menu, Crown, LogIn } from "lucide-react";
 import { useSidebar } from "./SidebarContext";
 
 export default function Header() {
@@ -36,6 +37,15 @@ export default function Header() {
 
                 {/* Right Section */}
                 <div className="flex items-center gap-3">
+                    {/* Log In Button - ADDED */}
+                    <Link
+                        href="/login"
+                        className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 hover:text-amber-400 text-slate-300 text-sm font-medium transition-all border border-slate-700 hover:border-amber-500/30"
+                    >
+                        <LogIn className="w-4 h-4" />
+                        Log In
+                    </Link>
+
                     {/* Gold Level Badge - CRITICAL FEATURE */}
                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 to-amber-600/20 border border-amber-500/30 gold-glow">
                         <Crown className="w-4 h-4 text-amber-500" />

@@ -19,6 +19,8 @@ import { currentUser } from "@/lib/mockData";
 import { calculatePeerMatch, PeerMatchResult } from "@/lib/logic";
 import PeerCard from "@/components/community/PeerCard";
 import GroupCard from "@/components/community/GroupCard";
+import { useGroups } from "@/context/GroupsContext";
+import { useRouter } from "next/navigation";
 
 // =========================================
 // DUMMY USERS FOR DEMONSTRATION
@@ -249,13 +251,21 @@ export default function CommunityPage() {
         );
     }, [searchQuery]);
 
+    const { joinGroup, isMember } = useGroups();
+    const router = useRouter();
+
     const handleConnect = (userId: string) => {
         console.log("Connect with:", userId);
         alert(`Connection request sent to ${userId}!`);
     };
 
     const handleJoinGroup = (groupId: string) => {
-        console.log("Joined group:", groupId);
+        const group = interestGroups.find(g => g.id === groupId);
+        if (group) {
+            joinGroup(group);
+            // Optional: Redirect to group chat immediately
+            // router.push("/groups");
+        }
     };
 
     return (
@@ -372,6 +382,7 @@ export default function CommunityPage() {
                                     <GroupCard
                                         key={group.id}
                                         {...group}
+                                        isJoined={isMember(group.id)}
                                         onJoin={handleJoinGroup}
                                     />
                                 ))}

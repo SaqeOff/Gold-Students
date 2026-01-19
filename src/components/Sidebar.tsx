@@ -11,6 +11,7 @@ import {
     X,
     ShieldAlert,
     LogOut,
+    MessageSquare, // Icon for Groups
 } from "lucide-react";
 import { useSidebar } from "./SidebarContext";
 import { useAuth } from "@/context/AuthContext";
@@ -19,6 +20,7 @@ const navItems = [
     { name: "Dashboard", href: "/", icon: LayoutDashboard },
     { name: "Opportunities", href: "/opportunities", icon: Briefcase },
     { name: "Community", href: "/community", icon: Users },
+    { name: "Interest Groups", href: "/groups", icon: MessageSquare }, // ADDED
     { name: "My Profile", href: "/profile", icon: UserCircle },
 ];
 

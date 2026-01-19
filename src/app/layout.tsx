@@ -4,6 +4,7 @@ import "./globals.css";
 import { SidebarProvider } from "@/components/SidebarContext";
 import { UserProvider } from "@/components/UserContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { GroupsProvider } from "@/context/GroupsContext"; // Added import
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 
@@ -51,19 +52,21 @@ export default function RootLayout({
       >
         <AuthProvider>
           <UserProvider>
-            <SidebarProvider>
-              {/* Fixed Sidebar */}
-              <Sidebar />
+            <GroupsProvider> {/* Added GroupsProvider */}
+              <SidebarProvider>
+                {/* Fixed Sidebar */}
+                <Sidebar />
 
-              {/* Main Content Area */}
-              <div className="lg:ml-[280px] min-h-screen flex flex-col">
-                {/* Sticky Header */}
-                <Header />
+                {/* Main Content Area */}
+                <div className="lg:ml-[280px] min-h-screen flex flex-col">
+                  {/* Sticky Header */}
+                  <Header />
 
-                {/* Page Content */}
-                <main className="flex-1 p-4 lg:p-6">{children}</main>
-              </div>
-            </SidebarProvider>
+                  {/* Page Content */}
+                  <main className="flex-1 p-4 lg:p-6">{children}</main>
+                </div>
+              </SidebarProvider>
+            </GroupsProvider> {/* Closed GroupsProvider */}
           </UserProvider>
         </AuthProvider>
       </body>

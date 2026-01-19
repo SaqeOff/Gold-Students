@@ -16,6 +16,9 @@ import {
   ChevronRight,
 } from "lucide-react";
 
+import AINotificationSystem from "@/components/AINotificationSystem";
+import AIReportModal from "@/components/AIReportModal";
+
 // =========================================
 // STATS & ACTIVITY DATA
 // =========================================
@@ -85,178 +88,16 @@ export default function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isScanning, setIsScanning] = useState(true);
 
-  const openModal = () => {
-    setIsScanning(true);
-    setIsModalOpen(true);
-    // Start scanning animation
-    setTimeout(() => {
-      setIsScanning(false);
-    }, 1500);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setIsScanning(true);
-  };
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
+      <AINotificationSystem />
       {/* =========================================
           AI REPORT MODAL
           ========================================= */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-            onClick={closeModal}
-          />
-
-          {/* Modal Container */}
-          <div className="absolute inset-0 flex items-center justify-center p-4">
-            <div
-              className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 border border-white/10 rounded-3xl shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Header */}
-              <div className="sticky top-0 z-10 px-6 py-4 border-b border-white/10 bg-slate-900/95 backdrop-blur-sm flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center">
-                    <Sparkles className="w-5 h-5 text-slate-900" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-bold text-white">✨ Gold AI Strategic Analysis</h2>
-                    <p className="text-xs text-slate-400">Powered by Opportunity Matching Engine</p>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="p-2 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              {/* Content */}
-              <div className="p-6">
-                {isScanning ? (
-                  /* Scanning Animation */
-                  <div className="py-16 flex flex-col items-center justify-center">
-                    <div className="relative">
-                      <div className="w-20 h-20 rounded-full border-4 border-slate-700" />
-                      <div className="absolute inset-0 w-20 h-20 rounded-full border-4 border-amber-500 border-t-transparent animate-spin" />
-                      <Brain className="absolute inset-0 m-auto w-8 h-8 text-amber-400" />
-                    </div>
-                    <p className="mt-6 text-lg font-medium text-white">Scanning Profile...</p>
-                    <p className="text-sm text-slate-400 mt-1">Analyzing 47 data points</p>
-                  </div>
-                ) : (
-                  /* Analysis Results */
-                  <div className="space-y-6">
-                    {/* Profile Strength */}
-                    <section className="p-5 rounded-2xl bg-slate-800/50 border border-white/5">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="font-semibold text-white flex items-center gap-2">
-                          <TrendingUp className="w-5 h-5 text-amber-500" />
-                          Profile Strength
-                        </h3>
-                        <span className="text-amber-400 font-bold">👑 Elite Tier</span>
-                      </div>
-                      <div className="h-4 bg-slate-700 rounded-full overflow-hidden">
-                        <div className="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full w-[87%]" />
-                      </div>
-                      <div className="flex justify-between mt-2 text-xs text-slate-400">
-                        <span>0%</span>
-                        <span className="text-amber-400 font-bold">87%</span>
-                        <span>100%</span>
-                      </div>
-                    </section>
-
-                    {/* AI Verdict */}
-                    <section className="p-5 rounded-2xl border bg-green-500/10 border-green-500/20">
-                      <h3 className="font-semibold text-white flex items-center gap-2 mb-3">
-                        <Brain className="w-5 h-5 text-green-400" />
-                        AI Verdict
-                      </h3>
-                      <p className="text-lg text-green-300">
-                        Exceptional Profile: Your elite verification status and strong skill portfolio position you in the top tier. You are highly competitive for all opportunities in your feed.
-                      </p>
-                    </section>
-
-                    {/* Key Insights */}
-                    <section>
-                      <h3 className="font-semibold text-white flex items-center gap-2 mb-4">
-                        <Zap className="w-5 h-5 text-amber-500" />
-                        Key Insights
-                      </h3>
-                      <div className="space-y-3">
-                        <div className="p-4 rounded-xl border bg-green-500/10 border-green-500/20">
-                          <h4 className="font-medium text-white">🛡️ Elite Tier Verified</h4>
-                          <p className="text-sm text-slate-300 mt-1">Your trust score (94) places you in the top 5% of the community.</p>
-                        </div>
-                        <div className="p-4 rounded-xl border bg-green-500/10 border-green-500/20">
-                          <h4 className="font-medium text-white">💎 Strong Skill Portfolio</h4>
-                          <p className="text-sm text-slate-300 mt-1">Your skills maximize matching potential for premium opportunities.</p>
-                        </div>
-                      </div>
-                    </section>
-
-                    {/* Recommendations */}
-                    <section>
-                      <h3 className="font-semibold text-white flex items-center gap-2 mb-4">
-                        <Target className="w-5 h-5 text-amber-500" />
-                        Top 3 Next Steps
-                      </h3>
-                      <div className="space-y-3">
-                        <Link
-                          href="/opportunities"
-                          onClick={closeModal}
-                          className="block p-4 rounded-xl bg-slate-800/50 border border-white/5 hover:border-amber-500/30 transition-all group"
-                        >
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <span className="text-white font-medium group-hover:text-amber-400">1. Apply to Top Matches</span>
-                              <p className="text-sm text-slate-400">3 high-priority opportunities waiting</p>
-                            </div>
-                            <ChevronRight className="w-5 h-5 text-slate-500 group-hover:text-amber-400" />
-                          </div>
-                        </Link>
-                        <Link
-                          href="/community"
-                          onClick={closeModal}
-                          className="block p-4 rounded-xl bg-slate-800/50 border border-white/5 hover:border-amber-500/30 transition-all group"
-                        >
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <span className="text-white font-medium group-hover:text-amber-400">2. Find Co-Founders</span>
-                              <p className="text-sm text-slate-400">12 potential matches in your network</p>
-                            </div>
-                            <ChevronRight className="w-5 h-5 text-slate-500 group-hover:text-amber-400" />
-                          </div>
-                        </Link>
-                        <Link
-                          href="/profile"
-                          onClick={closeModal}
-                          className="block p-4 rounded-xl bg-slate-800/50 border border-white/5 hover:border-amber-500/30 transition-all group"
-                        >
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <span className="text-white font-medium group-hover:text-amber-400">3. Complete Your Profile</span>
-                              <p className="text-sm text-slate-400">15% remaining for full optimization</p>
-                            </div>
-                            <ChevronRight className="w-5 h-5 text-slate-500 group-hover:text-amber-400" />
-                          </div>
-                        </Link>
-                      </div>
-                    </section>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <AIReportModal isOpen={isModalOpen} onClose={closeModal} />
 
       {/* =========================================
           HERO SECTION
