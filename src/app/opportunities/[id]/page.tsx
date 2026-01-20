@@ -28,6 +28,10 @@ import {
 import { formatDate, daysUntilDeadline } from "@/lib/utils";
 import TrustGraph from "@/components/opportunities/TrustGraph";
 import GapAnalysisCard from "@/components/opportunities/GapAnalysisCard";
+import { CyberLayout } from "@/components/cyber/CyberLayout";
+import { CyberCard } from "@/components/cyber/CyberCard";
+import { GlitchText } from "@/components/cyber/GlitchText";
+import { COLORS } from "@/components/cyber/constants";
 
 // Commitment stage type
 type CommitmentStage = "none" | "interested" | "preparing" | "applied";
@@ -51,25 +55,28 @@ export default function OpportunityDetailsPage() {
     // 404 State
     if (!opportunity || !matchResult) {
         return (
-            <div className="min-h-screen flex items-center justify-center p-6">
-                <div className="text-center">
-                    <div className="w-20 h-20 rounded-full bg-slate-800 flex items-center justify-center mx-auto mb-6">
-                        <AlertTriangle className="w-10 h-10 text-amber-500" />
+            <CyberLayout>
+                <div className="flex-1 flex items-center justify-center p-6">
+                    <div className="text-center">
+                        <div className="w-20 h-20 rounded-full bg-slate-800 flex items-center justify-center mx-auto mb-6 relative">
+                            <AlertTriangle className="w-10 h-10 text-[#FFD700]" />
+                            <div className="absolute inset-0 rounded-full animate-ping bg-[#FFD700]/10" />
+                        </div>
+                        <h1 className="text-2xl font-bold text-white mb-2">
+                            <GlitchText>Opportunity Not Found</GlitchText>
+                        </h1>
+                        <p className="text-slate-400 mb-6">
+                            This opportunity may have been removed or the link is incorrect.
+                        </p>
+                        <button
+                            onClick={() => router.push("/opportunities")}
+                            className="px-6 py-3 rounded-lg bg-[#FFD700] text-slate-900 font-medium hover:bg-[#FFE55C] transition-colors shadow-[0_0_20px_rgba(255,215,0,0.3)]"
+                        >
+                            Browse Opportunities
+                        </button>
                     </div>
-                    <h1 className="text-2xl font-bold text-white mb-2">
-                        Opportunity Not Found
-                    </h1>
-                    <p className="text-slate-400 mb-6">
-                        This opportunity may have been removed or the link is incorrect.
-                    </p>
-                    <button
-                        onClick={() => router.push("/opportunities")}
-                        className="px-6 py-3 rounded-lg bg-amber-500 text-slate-900 font-medium hover:bg-amber-400 transition-colors"
-                    >
-                        Browse Opportunities
-                    </button>
                 </div>
-            </div>
+            </CyberLayout>
         );
     }
 
@@ -79,255 +86,254 @@ export default function OpportunityDetailsPage() {
 
     // Score color
     const getScoreColor = (score: number) => {
-        if (score >= 80) return "#22c55e";
-        if (score >= 50) return "#f59e0b";
-        return "#ef4444";
+        if (score >= 80) return COLORS.matrixGreen;
+        if (score >= 50) return COLORS.highVoltageGold;
+        return COLORS.errorRed;
     };
 
     return (
-        <div className="min-h-screen pb-24">
+        <CyberLayout className="pb-24">
             {/* Back Button */}
-            <div className="p-4 md:p-6">
+            <div className="mb-6">
                 <button
                     onClick={() => router.back()}
-                    className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
+                    className="flex items-center gap-2 text-slate-400 hover:text-[#00f3ff] transition-colors group"
                 >
-                    <ArrowLeft className="w-5 h-5" />
+                    <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
                     Back to Opportunities
                 </button>
             </div>
 
             {/* Hero Section */}
-            <header className="px-4 md:px-6 pb-6">
-                <div className="glass-card rounded-2xl p-6 md:p-8 border border-white/10">
-                    <div className="flex flex-col lg:flex-row gap-6">
-                        {/* Left: Info */}
-                        <div className="flex-1">
-                            {/* Type & Verified Badge */}
-                            <div className="flex flex-wrap items-center gap-3 mb-4">
-                                <span className="px-3 py-1 rounded-full bg-slate-700 text-slate-300 text-sm">
-                                    {opportunity.type}
+            <CyberCard className="p-6 md:p-8 mb-6 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-[#00f3ff]/5 rounded-full blur-[100px]" />
+                <div className="flex flex-col lg:flex-row gap-6 relative z-10">
+                    {/* Left: Info */}
+                    <div className="flex-1">
+                        {/* Type & Verified Badge */}
+                        <div className="flex flex-wrap items-center gap-3 mb-4">
+                            <span className="px-3 py-1 rounded-full bg-slate-700/50 text-slate-300 text-sm border border-slate-600/50">
+                                {opportunity.type}
+                            </span>
+                            {opportunity.isVerified ? (
+                                <span className="flex items-center gap-1 px-3 py-1 rounded-full bg-[#0aff00]/10 text-[#0aff00] text-sm border border-[#0aff00]/20">
+                                    <ShieldCheck className="w-4 h-4" />
+                                    Verified Partner
                                 </span>
-                                {opportunity.isVerified ? (
-                                    <span className="flex items-center gap-1 px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-sm">
-                                        <ShieldCheck className="w-4 h-4" />
-                                        Verified Partner
-                                    </span>
+                            ) : (
+                                <span className="flex items-center gap-1 px-3 py-1 rounded-full bg-[#FFD700]/10 text-[#FFD700] text-sm border border-[#FFD700]/20">
+                                    <AlertTriangle className="w-4 h-4" />
+                                    Unverified
+                                </span>
+                            )}
+                            {/* Silent Competition Badge */}
+                            <span
+                                className={`px-3 py-1 rounded-full text-sm ${getCompetitionColor(
+                                    opportunity.competition_level
+                                )} bg-slate-800 border border-current opacity-80`}
+                            >
+                                {formatCompetitionLabel(opportunity.competition_level)}
+                            </span>
+                        </div>
+
+                        {/* Title */}
+                        <h1 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                            <GlitchText>{opportunity.title}</GlitchText>
+                        </h1>
+
+                        {/* Meta Info */}
+                        <div className="flex flex-wrap gap-4 text-slate-400">
+                            <span className="flex items-center gap-2">
+                                <Building2 className="w-5 h-5 text-[#FFD700]" />
+                                {opportunity.source_partner}
+                            </span>
+                            <span className="flex items-center gap-2">
+                                <MapPin className="w-5 h-5 text-[#FFD700]" />
+                                {opportunity.location}
+                            </span>
+                            <span
+                                className={`flex items-center gap-2 ${isPast ? "text-slate-500" : isUrgent ? "text-[#ff003c]" : ""
+                                    }`}
+                            >
+                                {isUrgent ? (
+                                    <Clock className="w-5 h-5" />
                                 ) : (
-                                    <span className="flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 text-sm">
-                                        <AlertTriangle className="w-4 h-4" />
-                                        Unverified
+                                    <Calendar className="w-5 h-5 text-[#FFD700]" />
+                                )}
+                                {isPast
+                                    ? "Deadline passed"
+                                    : isUrgent
+                                        ? `${daysLeft} days left!`
+                                        : `Deadline: ${formatDate(opportunity.deadline)}`}
+                            </span>
+                        </div>
+
+                        {/* Compensation & Duration */}
+                        {(opportunity.compensation || opportunity.duration) && (
+                            <div className="flex flex-wrap gap-4 mt-4">
+                                {opportunity.compensation && (
+                                    <span className="flex items-center gap-2 text-[#0aff00]">
+                                        <DollarSign className="w-5 h-5" />
+                                        {opportunity.compensation}
                                     </span>
                                 )}
-                                {/* Silent Competition Badge */}
-                                <span
-                                    className={`px-3 py-1 rounded-full text-sm ${getCompetitionColor(
-                                        opportunity.competition_level
-                                    )} bg-slate-800`}
-                                >
-                                    {formatCompetitionLabel(opportunity.competition_level)}
-                                </span>
-                            </div>
-
-                            {/* Title */}
-                            <h1 className="text-2xl md:text-3xl font-bold text-white mb-4">
-                                {opportunity.title}
-                            </h1>
-
-                            {/* Meta Info */}
-                            <div className="flex flex-wrap gap-4 text-slate-400">
-                                <span className="flex items-center gap-2">
-                                    <Building2 className="w-5 h-5 text-amber-500" />
-                                    {opportunity.source_partner}
-                                </span>
-                                <span className="flex items-center gap-2">
-                                    <MapPin className="w-5 h-5 text-amber-500" />
-                                    {opportunity.location}
-                                </span>
-                                <span
-                                    className={`flex items-center gap-2 ${isPast ? "text-slate-500" : isUrgent ? "text-red-400" : ""
-                                        }`}
-                                >
-                                    {isUrgent ? (
+                                {opportunity.duration && (
+                                    <span className="flex items-center gap-2 text-slate-400">
                                         <Clock className="w-5 h-5" />
-                                    ) : (
-                                        <Calendar className="w-5 h-5 text-amber-500" />
-                                    )}
-                                    {isPast
-                                        ? "Deadline passed"
-                                        : isUrgent
-                                            ? `${daysLeft} days left!`
-                                            : `Deadline: ${formatDate(opportunity.deadline)}`}
-                                </span>
-                            </div>
-
-                            {/* Compensation & Duration */}
-                            {(opportunity.compensation || opportunity.duration) && (
-                                <div className="flex flex-wrap gap-4 mt-4">
-                                    {opportunity.compensation && (
-                                        <span className="flex items-center gap-2 text-green-400">
-                                            <DollarSign className="w-5 h-5" />
-                                            {opportunity.compensation}
-                                        </span>
-                                    )}
-                                    {opportunity.duration && (
-                                        <span className="flex items-center gap-2 text-slate-400">
-                                            <Clock className="w-5 h-5" />
-                                            {opportunity.duration}
-                                        </span>
-                                    )}
-                                    {opportunity.remote_friendly && (
-                                        <span className="flex items-center gap-2 text-blue-400">
-                                            <Globe className="w-5 h-5" />
-                                            Remote Friendly
-                                        </span>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Right: Match Score Ring */}
-                        <div className="flex flex-col items-center justify-center">
-                            <div className="relative w-32 h-32">
-                                <svg className="w-32 h-32 transform -rotate-90">
-                                    <circle
-                                        cx="64"
-                                        cy="64"
-                                        r="56"
-                                        fill="none"
-                                        stroke="rgba(255,255,255,0.1)"
-                                        strokeWidth="8"
-                                    />
-                                    <circle
-                                        cx="64"
-                                        cy="64"
-                                        r="56"
-                                        fill="none"
-                                        stroke={getScoreColor(matchResult.score)}
-                                        strokeWidth="8"
-                                        strokeLinecap="round"
-                                        strokeDasharray={2 * Math.PI * 56}
-                                        strokeDashoffset={
-                                            2 * Math.PI * 56 * (1 - matchResult.score / 100)
-                                        }
-                                        className="transition-all duration-1000"
-                                        style={{
-                                            filter: `drop-shadow(0 0 8px ${getScoreColor(
-                                                matchResult.score
-                                            )}50)`,
-                                        }}
-                                    />
-                                </svg>
-                                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                    <span className="text-3xl font-bold text-white">
-                                        {matchResult.score}%
+                                        {opportunity.duration}
                                     </span>
-                                    <span className="text-xs text-slate-400 uppercase">Match</span>
-                                </div>
+                                )}
+                                {opportunity.remote_friendly && (
+                                    <span className="flex items-center gap-2 text-[#00f3ff]">
+                                        <Globe className="w-5 h-5" />
+                                        Remote Friendly
+                                    </span>
+                                )}
                             </div>
-                            <p className="text-sm text-slate-400 mt-2 text-center">
-                                Based on your profile
-                            </p>
+                        )}
+                    </div>
+
+                    {/* Right: Match Score Ring */}
+                    <div className="flex flex-col items-center justify-center">
+                        <div className="relative w-32 h-32">
+                            <svg className="w-32 h-32 transform -rotate-90">
+                                <circle
+                                    cx="64"
+                                    cy="64"
+                                    r="56"
+                                    fill="none"
+                                    stroke="rgba(255,255,255,0.05)"
+                                    strokeWidth="8"
+                                />
+                                <circle
+                                    cx="64"
+                                    cy="64"
+                                    r="56"
+                                    fill="none"
+                                    stroke={getScoreColor(matchResult.score)}
+                                    strokeWidth="8"
+                                    strokeLinecap="round"
+                                    strokeDasharray={2 * Math.PI * 56}
+                                    strokeDashoffset={
+                                        2 * Math.PI * 56 * (1 - matchResult.score / 100)
+                                    }
+                                    className="transition-all duration-1000"
+                                    style={{
+                                        filter: `drop-shadow(0 0 8px ${getScoreColor(
+                                            matchResult.score
+                                        )}80)`,
+                                    }}
+                                />
+                            </svg>
+                            <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                <span className="text-3xl font-bold text-white" style={{ textShadow: `0 0 10px ${getScoreColor(matchResult.score)}` }}>
+                                    {matchResult.score}%
+                                </span>
+                                <span className="text-xs text-slate-400 uppercase tracking-widest">Match</span>
+                            </div>
                         </div>
+                        <p className="text-sm text-slate-400 mt-2 text-center">
+                            Based on your profile
+                        </p>
                     </div>
                 </div>
-            </header>
+            </CyberCard>
 
             {/* Main Content Grid */}
-            <div className="px-4 md:px-6">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* Main Column */}
-                    <div className="lg:col-span-2 space-y-6">
-                        {/* Description */}
-                        <section className="glass-card rounded-xl p-6 border border-white/10">
-                            <h2 className="text-lg font-semibold text-white mb-4">
-                                About This Opportunity
-                            </h2>
-                            <p className="text-slate-300 leading-relaxed">
-                                {opportunity.description}
-                            </p>
-                        </section>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Main Column */}
+                <div className="lg:col-span-2 space-y-6">
+                    {/* Description */}
+                    <CyberCard className="p-6">
+                        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                            <span className="w-1 h-6 bg-[#00f3ff] rounded-full shadow-[0_0_10px_#00f3ff]" />
+                            About This Opportunity
+                        </h2>
+                        <p className="text-slate-300 leading-relaxed">
+                            {opportunity.description}
+                        </p>
+                    </CyberCard>
 
-                        {/* Requirements */}
-                        <section className="glass-card rounded-xl p-6 border border-white/10">
-                            <h2 className="text-lg font-semibold text-white mb-4">
-                                Requirements
+                    {/* Requirements */}
+                    <CyberCard className="p-6">
+                        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                            <span className="w-1 h-6 bg-[#00f3ff] rounded-full shadow-[0_0_10px_#00f3ff]" />
+                            Requirements
+                        </h2>
+                        <ul className="space-y-2">
+                            {opportunity.requirements.map((req, index) => (
+                                <li key={index} className="flex items-start gap-3">
+                                    {matchResult.matching_skills.includes(
+                                        req.toLowerCase().replace(/\s+/g, "_")
+                                    ) ? (
+                                        <CheckCircle2 className="w-5 h-5 text-[#0aff00] flex-shrink-0 mt-0.5 shadow-[0_0_10px_rgba(10,255,0,0.3)]" />
+                                    ) : (
+                                        <div className="w-5 h-5 rounded-full border-2 border-slate-600 flex-shrink-0 mt-0.5" />
+                                    )}
+                                    <span className="text-slate-300">{req}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </CyberCard>
+
+                    {/* Why This Fits You */}
+                    {matchResult.gap_analysis.length > 0 && (
+                        <CyberCard className="p-6 border-[#FFD700]/30" glowColor={COLORS.highVoltageGold}>
+                            <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                                <Users className="w-5 h-5 text-[#FFD700]" />
+                                Match Analysis
                             </h2>
                             <ul className="space-y-2">
-                                {opportunity.requirements.map((req, index) => (
-                                    <li key={index} className="flex items-start gap-3">
-                                        {matchResult.matching_skills.includes(
-                                            req.toLowerCase().replace(/\s+/g, "_")
-                                        ) ? (
-                                            <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                                        ) : (
-                                            <div className="w-5 h-5 rounded-full border-2 border-slate-600 flex-shrink-0 mt-0.5" />
-                                        )}
-                                        <span className="text-slate-300">{req}</span>
+                                {matchResult.gap_analysis.map((reason, index) => (
+                                    <li
+                                        key={index}
+                                        className="flex items-start gap-3 text-slate-300"
+                                    >
+                                        <span className="text-[#FFD700] shadow-[0_0_10px_rgba(255,215,0,0.5)]">•</span>
+                                        {reason}
                                     </li>
                                 ))}
                             </ul>
-                        </section>
+                        </CyberCard>
+                    )}
+                </div>
 
-                        {/* Why This Fits You */}
-                        {matchResult.gap_analysis.length > 0 && (
-                            <section className="glass-card rounded-xl p-6 border border-amber-500/20">
-                                <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                                    <Users className="w-5 h-5 text-amber-500" />
-                                    Match Analysis
-                                </h2>
-                                <ul className="space-y-2">
-                                    {matchResult.gap_analysis.map((reason, index) => (
-                                        <li
-                                            key={index}
-                                            className="flex items-start gap-3 text-slate-300"
-                                        >
-                                            <span className="text-amber-500">•</span>
-                                            {reason}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </section>
-                        )}
-                    </div>
+                {/* Sidebar */}
+                <div className="space-y-6">
+                    {/* Trust Graph */}
+                    <TrustGraph
+                        isVerified={opportunity.isVerified}
+                        sourcePartner={opportunity.source_partner}
+                        postedAt={opportunity.posted_at}
+                    />
 
-                    {/* Sidebar */}
-                    <div className="space-y-6">
-                        {/* Trust Graph */}
-                        <TrustGraph
-                            isVerified={opportunity.isVerified}
-                            sourcePartner={opportunity.source_partner}
-                            postedAt={opportunity.posted_at}
-                        />
+                    {/* Gap Analysis */}
+                    <GapAnalysisCard matchResult={matchResult} />
 
-                        {/* Gap Analysis */}
-                        <GapAnalysisCard matchResult={matchResult} />
-
-                        {/* Applicant Stats */}
-                        {opportunity.applicant_count && (
-                            <div className="glass-card rounded-xl p-5 border border-white/10">
-                                <div className="flex items-center justify-between">
-                                    <span className="text-slate-400 text-sm">Applicants</span>
-                                    <span className="text-white font-semibold">
-                                        {opportunity.applicant_count.toLocaleString()}
-                                    </span>
-                                </div>
+                    {/* Applicant Stats */}
+                    {opportunity.applicant_count && (
+                        <CyberCard className="p-5">
+                            <div className="flex items-center justify-between">
+                                <span className="text-slate-400 text-sm">Applicants</span>
+                                <span className="text-white font-semibold text-lg" style={{ textShadow: "0 0 10px rgba(255,255,255,0.3)" }}>
+                                    {opportunity.applicant_count.toLocaleString()}
+                                </span>
                             </div>
-                        )}
-                    </div>
+                        </CyberCard>
+                    )}
                 </div>
             </div>
 
             {/* Sticky Footer - Soft Commitment */}
-            <div className="fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-lg border-t border-white/10 p-4 z-50">
+            <div className="fixed bottom-0 left-0 right-0 bg-[#050505]/90 backdrop-blur-xl border-t border-[#00f3ff]/20 p-4 z-50">
                 <div className="max-w-5xl mx-auto">
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                         {/* Commitment Status */}
                         <div className="text-sm text-slate-400">
                             {commitment === "none" && "Choose your commitment level"}
-                            {commitment === "interested" && "✓ Saved to your interests"}
-                            {commitment === "preparing" && "✓ Marked as preparing"}
-                            {commitment === "applied" && "✓ Application submitted!"}
+                            {commitment === "interested" && <span className="text-[#00f3ff]">✓ Saved to your interests</span>}
+                            {commitment === "preparing" && <span className="text-purple-400">✓ Marked as preparing</span>}
+                            {commitment === "applied" && <span className="text-[#0aff00]">✓ Application submitted!</span>}
                         </div>
 
                         {/* Action Buttons */}
@@ -336,12 +342,12 @@ export default function OpportunityDetailsPage() {
                             <button
                                 onClick={() => setCommitment("interested")}
                                 className={`flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-all ${commitment === "interested"
-                                        ? "bg-blue-500/20 text-blue-400 border border-blue-500/50"
-                                        : "bg-slate-800 text-slate-300 border border-white/10 hover:border-blue-500/30"
+                                    ? "bg-[#00f3ff]/20 text-[#00f3ff] border border-[#00f3ff]/50 shadow-[0_0_15px_rgba(0,243,255,0.2)]"
+                                    : "bg-slate-800 text-slate-300 border border-white/10 hover:border-[#00f3ff]/30 hover:text-white"
                                     }`}
                             >
                                 <Bookmark
-                                    className={`w-5 h-5 ${commitment === "interested" ? "fill-blue-400" : ""
+                                    className={`w-5 h-5 ${commitment === "interested" ? "fill-[#00f3ff] stroke-[#00f3ff]" : ""
                                         }`}
                                 />
                                 <span className="hidden sm:inline">Save Interest</span>
@@ -351,8 +357,8 @@ export default function OpportunityDetailsPage() {
                             <button
                                 onClick={() => setCommitment("preparing")}
                                 className={`flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-all ${commitment === "preparing"
-                                        ? "bg-purple-500/20 text-purple-400 border border-purple-500/50"
-                                        : "bg-slate-800 text-slate-300 border border-white/10 hover:border-purple-500/30"
+                                    ? "bg-purple-500/20 text-purple-400 border border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.2)]"
+                                    : "bg-slate-800 text-slate-300 border border-white/10 hover:border-purple-500/30 hover:text-white"
                                     }`}
                             >
                                 <Wrench className="w-5 h-5" />
@@ -363,11 +369,11 @@ export default function OpportunityDetailsPage() {
                             <button
                                 onClick={() => setCommitment("applied")}
                                 disabled={isPast}
-                                className={`flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition-all ${isPast
-                                        ? "bg-slate-700 text-slate-500 cursor-not-allowed"
-                                        : commitment === "applied"
-                                            ? "bg-green-500 text-white"
-                                            : "bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 hover:from-amber-400 hover:to-amber-500 shadow-lg shadow-amber-500/20"
+                                className={`flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition-all relative overflow-hidden ${isPast
+                                    ? "bg-slate-700 text-slate-500 cursor-not-allowed"
+                                    : commitment === "applied"
+                                        ? "bg-[#0aff00] text-black shadow-[0_0_20px_#0aff00]"
+                                        : "bg-gradient-to-r from-[#FFD700] to-[#FFA500] text-slate-900 hover:from-[#FFE55C] hover:to-[#FFB733] shadow-[0_0_20px_rgba(255,215,0,0.3)]"
                                     }`}
                             >
                                 {commitment === "applied" ? (
@@ -386,6 +392,6 @@ export default function OpportunityDetailsPage() {
                     </div>
                 </div>
             </div>
-        </div>
+        </CyberLayout>
     );
 }

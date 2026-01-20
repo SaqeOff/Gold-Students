@@ -17,7 +17,9 @@ import {
   ChevronRight,
   Crosshair,
   Activity,
+  Briefcase,
 } from "lucide-react";
+import { opportunities } from "@/lib/mockData"; // Import opportunities for matching
 
 import AINotificationSystem from "@/components/AINotificationSystem";
 import AIReportModal from "@/components/AIReportModal";
@@ -208,8 +210,8 @@ const DataRain = ({ mouseX, mouseY }: { mouseX: any; mouseY: any }) => {
   const chars = ["0", "1", "A", "B", "C", "D", "E", "F", "X", "▓", "░", "█"];
 
   // Parallax effect - inverse mouse movement
-  const parallaxX = useTransform(mouseX, [0, window?.innerWidth || 1920], [20, -20]);
-  const parallaxY = useTransform(mouseY, [0, window?.innerHeight || 1080], [10, -10]);
+  const parallaxX = useTransform(mouseX, [0, typeof window !== 'undefined' ? window.innerWidth : 1920], [20, -20]);
+  const parallaxY = useTransform(mouseY, [0, typeof window !== 'undefined' ? window.innerHeight : 1080], [10, -10]);
   const smoothX = useSpring(parallaxX, { stiffness: 50, damping: 30 });
   const smoothY = useSpring(parallaxY, { stiffness: 50, damping: 30 });
 
@@ -513,7 +515,7 @@ const heroVariants = {
     opacity: 1,
     y: 0,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 100,
       damping: 15,
     },
@@ -527,7 +529,7 @@ const cardVariants = {
     y: 0,
     scale: 1,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 100,
     },
   },
@@ -575,8 +577,7 @@ export default function Dashboard() {
         initial="hidden"
         animate="visible"
       >
-        <AINotificationSystem />
-        <AIReportModal isOpen={isModalOpen} onClose={closeModal} />
+
 
         {/* =========================================
             HERO SECTION - COMMAND CENTER
@@ -747,10 +748,10 @@ export default function Dashboard() {
                         className="text-5xl font-bold text-white mb-2 tracking-tighter"
                         style={{
                           textShadow: `0 0 20px ${index === 0
-                              ? COLORS.cyberCyan
-                              : index === 1
-                                ? COLORS.highVoltageGold
-                                : "#a855f7"
+                            ? COLORS.cyberCyan
+                            : index === 1
+                              ? COLORS.highVoltageGold
+                              : "#a855f7"
                             }40`,
                         }}
                       >
@@ -772,10 +773,10 @@ export default function Dashboard() {
                       className="absolute bottom-0 left-0 right-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity"
                       style={{
                         background: `linear-gradient(90deg, transparent, ${index === 0
-                            ? COLORS.cyberCyan
-                            : index === 1
-                              ? COLORS.highVoltageGold
-                              : "#a855f7"
+                          ? COLORS.cyberCyan
+                          : index === 1
+                            ? COLORS.highVoltageGold
+                            : "#a855f7"
                           }, transparent)`,
                       }}
                     />
@@ -784,6 +785,50 @@ export default function Dashboard() {
               </motion.div>
             );
           })}
+        </motion.section>
+
+        {/* =========================================
+            PRIME MATCHES - NEW SECTION
+            ========================================= */}
+        <motion.section variants={containerVariants}>
+          <div className="flex items-center gap-4 mb-6">
+            <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-purple-400" />
+              <GlitchText delay={600}>PRIME MATCHES</GlitchText>
+            </h2>
+            <div className="h-[1px] flex-1 bg-gradient-to-r from-purple-500/30 to-transparent" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {opportunities.slice(0, 3).map((opp, i) => (
+              <motion.div key={opp.id} variants={cardVariants}>
+                <CyberCard
+                  className="p-5 h-full group cursor-pointer"
+                  glowColor="#a855f7" // Purple glow
+                  delay={0.2 * i}
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="p-2 rounded bg-purple-500/10 border border-purple-500/20 text-purple-400">
+                      <Briefcase className="w-5 h-5" />
+                    </div>
+                    <span className="text-xs font-mono text-purple-400 border border-purple-500/30 px-2 py-1 bg-purple-500/10">
+                      98% MATCH
+                    </span>
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">
+                    {opp.title}
+                  </h3>
+                  <p className="text-sm text-slate-400 mb-4 line-clamp-2">
+                    {opp.description}
+                  </p>
+                  <div className="flex items-center justify-between mt-auto">
+                    <span className="text-xs text-slate-500 font-mono">{opp.source_partner}</span>
+                    <ArrowRight className="w-4 h-4 text-purple-400 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </CyberCard>
+              </motion.div>
+            ))}
+          </div>
         </motion.section>
 
         {/* =========================================
@@ -876,6 +921,8 @@ export default function Dashboard() {
           </CyberCard>
         </motion.section>
       </motion.div>
+      <AINotificationSystem />
+      <AIReportModal isOpen={isModalOpen} onClose={closeModal} />
     </div>
   );
 }

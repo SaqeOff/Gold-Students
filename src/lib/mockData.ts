@@ -641,3 +641,166 @@ export const dashboardStats = {
     profileViews: 23,
     squadMembers: 5,
 };
+
+// =========================================
+// MOCK USERS (Peers)
+// =========================================
+
+export const mockUsers: User[] = [
+    {
+        id: "peer_001",
+        name: "Sarah Johnson",
+        email: "sarah@mit.edu",
+        avatar: undefined,
+        university: "MIT",
+        country: "United States",
+        skills: ["Python", "Machine Learning", "Data Analysis", "TensorFlow", "Statistics"],
+        interests: ["AI Research", "Startups", "Climate Tech"],
+        goals: [UserGoal.Research, UserGoal.Startup],
+        xp_level: ExperienceLevel.Expert,
+        trust_level: TrustLevel.Gold,
+        xp_points: 2800,
+        trust_score: 92,
+        profile_completeness: 95,
+        badges: [],
+        joined_at: new Date("2025-09-01"),
+        last_active: new Date(),
+    },
+    {
+        id: "peer_002",
+        name: "Raj Patel",
+        email: "raj@stanford.edu",
+        avatar: undefined,
+        university: "Stanford",
+        country: "United States",
+        skills: ["Python", "Deep Learning", "Computer Vision", "PyTorch", "Research"],
+        interests: ["AI Safety", "Autonomous Systems"],
+        goals: [UserGoal.Research],
+        xp_level: ExperienceLevel.Expert,
+        trust_level: TrustLevel.Gold,
+        xp_points: 3200,
+        trust_score: 95,
+        profile_completeness: 100,
+        badges: [],
+        joined_at: new Date("2025-06-15"),
+        last_active: new Date(),
+    },
+    {
+        id: "peer_003",
+        name: "Elena Schmidt",
+        email: "elena@tu-munich.de",
+        avatar: undefined,
+        university: "TU Munich",
+        country: "Germany",
+        skills: ["JavaScript", "React", "Node.js", "TypeScript", "UI/UX"],
+        interests: ["Web Development", "EdTech", "Design"],
+        goals: [UserGoal.Startup, UserGoal.Internship],
+        xp_level: ExperienceLevel.Intermediate,
+        trust_level: TrustLevel.Silver,
+        xp_points: 1500,
+        trust_score: 78,
+        profile_completeness: 85,
+        badges: [],
+        joined_at: new Date("2025-10-01"),
+        last_active: new Date(),
+    },
+    {
+        id: "peer_004",
+        name: "Yuki Tanaka",
+        email: "yuki@tokyo-u.ac.jp",
+        avatar: undefined,
+        university: "University of Tokyo",
+        country: "Japan",
+        skills: ["Python", "NLP", "Machine Learning", "Japanese", "Research"],
+        interests: ["Language AI", "Cultural Analytics"],
+        goals: [UserGoal.Research],
+        xp_level: ExperienceLevel.Intermediate,
+        trust_level: TrustLevel.Silver,
+        xp_points: 1800,
+        trust_score: 82,
+        profile_completeness: 90,
+        badges: [],
+        joined_at: new Date("2025-08-20"),
+        last_active: new Date(),
+    },
+    {
+        id: "peer_005",
+        name: "Marcus Williams",
+        email: "marcus@oxford.ac.uk",
+        avatar: undefined,
+        university: "Oxford",
+        country: "United Kingdom",
+        skills: ["Data Science", "Statistics", "R", "Python", "Economics"],
+        interests: ["FinTech", "Quantitative Finance"],
+        goals: [UserGoal.Internship],
+        xp_level: ExperienceLevel.Expert,
+        trust_level: TrustLevel.Gold,
+        xp_points: 2500,
+        trust_score: 88,
+        profile_completeness: 92,
+        badges: [],
+        joined_at: new Date("2025-07-10"),
+        last_active: new Date(),
+    },
+];
+
+// =========================================
+// MOCK INTEREST GROUPS
+// =========================================
+
+export const interestGroups = [
+    {
+        id: "grp_001",
+        name: "AI Research Network",
+        description:
+            "Connect with fellow researchers working on cutting-edge AI projects. Share papers, discuss breakthroughs, and find collaborators.",
+        memberCount: 1247,
+        icon: "🤖",
+        category: "Research",
+    },
+    {
+        id: "grp_002",
+        name: "Startup Founders Circle",
+        description:
+            "A community for student entrepreneurs. Get feedback on ideas, find co-founders, and learn from those who've built before.",
+        memberCount: 856,
+        icon: "🚀",
+        category: "Entrepreneurship",
+    },
+    {
+        id: "grp_003",
+        name: "Housing Hackers",
+        description:
+            "Find roommates, share housing tips, and navigate the international student housing market together.",
+        memberCount: 2103,
+        icon: "🏠",
+        category: "Lifestyle",
+    },
+    {
+        id: "grp_004",
+        name: "Grant Writers Guild",
+        description:
+            "Master the art of grant writing. Share successful proposals, get peer reviews, and discover new funding opportunities.",
+        memberCount: 634,
+        icon: "📝",
+        category: "Funding",
+    },
+    {
+        id: "grp_005",
+        name: "Climate Tech Collective",
+        description:
+            "Students passionate about using technology to combat climate change. Projects, discussions, and job opportunities.",
+        memberCount: 1089,
+        icon: "🌍",
+        category: "Impact",
+    },
+    {
+        id: "grp_006",
+        name: "Machine Learning Study Group",
+        description:
+            "Weekly paper readings, coding sessions, and ML competitions. All skill levels welcome.",
+        memberCount: 1567,
+        icon: "🧠",
+        category: "Learning",
+    },
+];

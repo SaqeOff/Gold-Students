@@ -4,7 +4,8 @@ import "./globals.css";
 import { SidebarProvider } from "@/components/SidebarContext";
 import { UserProvider } from "@/components/UserContext";
 import { AuthProvider } from "@/context/AuthContext";
-import { GroupsProvider } from "@/context/GroupsContext"; // Added import
+import { GroupsProvider } from "@/context/GroupsContext";
+import { SearchProvider } from "@/context/SearchContext"; // Added import
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 
@@ -52,21 +53,23 @@ export default function RootLayout({
       >
         <AuthProvider>
           <UserProvider>
-            <GroupsProvider> {/* Added GroupsProvider */}
-              <SidebarProvider>
-                {/* Fixed Sidebar */}
-                <Sidebar />
+            <GroupsProvider>
+              <SearchProvider> {/* Added SearchProvider */}
+                <SidebarProvider>
+                  {/* Fixed Sidebar */}
+                  <Sidebar />
 
-                {/* Main Content Area */}
-                <div className="lg:ml-[280px] min-h-screen flex flex-col">
-                  {/* Sticky Header */}
-                  <Header />
+                  {/* Main Content Area */}
+                  <div className="lg:ml-[280px] min-h-screen flex flex-col">
+                    {/* Sticky Header */}
+                    <Header />
 
-                  {/* Page Content */}
-                  <main className="flex-1 p-4 lg:p-6">{children}</main>
-                </div>
-              </SidebarProvider>
-            </GroupsProvider> {/* Closed GroupsProvider */}
+                    {/* Page Content */}
+                    <main className="flex-1 p-4 lg:p-6">{children}</main>
+                  </div>
+                </SidebarProvider>
+              </SearchProvider> {/* Closed SearchProvider */}
+            </GroupsProvider>
           </UserProvider>
         </AuthProvider>
       </body>
