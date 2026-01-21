@@ -4,16 +4,13 @@ import { useState, useEffect } from "react";
 
 export const GlitchText = ({
     children,
-    text,
     className = "",
     delay = 0,
 }: {
-    children?: string;
-    text?: string;
+    children: string;
     className?: string;
     delay?: number;
 }) => {
-    const content = text || children || "";
     const [displayText, setDisplayText] = useState("");
     const [isDecoding, setIsDecoding] = useState(true);
     const chars = "!@#$%^&*()_+-=[]{}|;:,.<>?ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -23,16 +20,16 @@ export const GlitchText = ({
             let iteration = 0;
             const interval = setInterval(() => {
                 setDisplayText(
-                    content
+                    children
                         .split("")
                         .map((char, index) => {
-                            if (index < iteration) return content[index];
+                            if (index < iteration) return children[index];
                             if (char === " ") return " ";
                             return chars[Math.floor(Math.random() * chars.length)];
                         })
                         .join("")
                 );
-                if (iteration >= content.length) {
+                if (iteration >= children.length) {
                     clearInterval(interval);
                     setIsDecoding(false);
                 }
@@ -41,11 +38,11 @@ export const GlitchText = ({
             return () => clearInterval(interval);
         }, delay);
         return () => clearTimeout(timeout);
-    }, [content, delay]);
+    }, [children, delay]);
 
     return (
         <span className={`font-mono ${className} ${isDecoding ? "text-[#00f3ff]" : ""}`}>
-            {displayText || content}
+            {displayText || children}
         </span>
     );
 };
