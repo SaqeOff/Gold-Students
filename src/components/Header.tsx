@@ -5,8 +5,6 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Menu, Crown, LogIn, Radio, Zap } from "lucide-react";
 import { useSidebar } from "./SidebarContext";
-import { useSearch } from "@/context/SearchContext";
-import GlobalSearchOverlay from "./GlobalSearchOverlay";
 
 // =========================================
 // CYBER NOTIFICATION NODE COMPONENT
@@ -94,40 +92,29 @@ const CyberNotificationNode = ({ onClick, hasNotification = true }: { onClick?: 
 // =========================================
 // CYBER SEARCH BAR COMPONENT
 // =========================================
-// =========================================
-// CYBER SEARCH BAR COMPONENT
-// =========================================
-const CyberSearchBar = () => {
-    const { searchQuery, setSearchQuery, openSearch } = useSearch();
-
-    return (
-        <div
-            className="hidden sm:flex items-center gap-3 px-4 py-2.5 bg-black/40 backdrop-blur-sm border border-cyan-500/20 w-[280px] lg:w-[360px] transition-all focus-within:border-cyan-400/50 focus-within:bg-cyan-950/20"
+const CyberSearchBar = () => (
+    <div
+        className="hidden sm:flex items-center gap-3 px-4 py-2.5 bg-black/40 backdrop-blur-sm border border-cyan-500/20 w-[280px] lg:w-[360px] transition-all focus-within:border-cyan-400/50 focus-within:bg-cyan-950/20"
+        style={{
+            clipPath: "polygon(0 0, 100% 0, 98% 100%, 2% 100%)",
+        }}
+    >
+        <Search className="w-4 h-4 text-cyan-500/50 flex-shrink-0" />
+        <input
+            type="text"
+            placeholder="Search opportunities, members..."
+            className="flex-1 bg-transparent text-sm text-white placeholder:text-slate-500 outline-none font-mono"
+        />
+        <kbd
+            className="hidden lg:inline-flex items-center gap-1 px-2 py-0.5 bg-cyan-950/50 text-[10px] text-cyan-500/60 font-mono border border-cyan-500/20"
             style={{
-                clipPath: "polygon(0 0, 100% 0, 98% 100%, 2% 100%)",
+                clipPath: "polygon(0 0, 100% 0, 95% 100%, 5% 100%)",
             }}
-            onClick={openSearch} // Open on container click
         >
-            <Search className="w-4 h-4 text-cyan-500/50 flex-shrink-0" />
-            <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search opportunities, members..."
-                className="flex-1 bg-transparent text-sm text-white placeholder:text-slate-500 outline-none font-mono cursor-pointer"
-                readOnly // Make it read-only here so it forces using the overlay for typing, preventing "disappearing" focus issues
-            />
-            <kbd
-                className="hidden lg:inline-flex items-center gap-1 px-2 py-0.5 bg-cyan-950/50 text-[10px] text-cyan-500/60 font-mono border border-cyan-500/20"
-                style={{
-                    clipPath: "polygon(0 0, 100% 0, 95% 100%, 5% 100%)",
-                }}
-            >
-                ⌘K
-            </kbd>
-        </div>
-    );
-};
+            ⌘K
+        </kbd>
+    </div>
+);
 
 // =========================================
 // GOLD LEVEL BADGE (ENHANCED)
@@ -262,7 +249,6 @@ export default function Header() {
                 }}
                 transition={{ duration: 3, repeat: Infinity }}
             />
-            <GlobalSearchOverlay />
         </header>
     );
 }

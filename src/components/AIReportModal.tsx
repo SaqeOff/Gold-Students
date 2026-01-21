@@ -156,7 +156,7 @@ const Timeline = () => {
                         <div className="flex items-start gap-4 pb-5">
                             <div
                                 className={`w-8 h-8 rounded-lg flex items-center justify-center ${step.active ? "ring-2" : ""}`}
-                                style={{ backgroundColor: `${step.color}15`, ringColor: step.active ? step.color : "transparent" }}
+                                style={{ backgroundColor: `${step.color}15`, "--tw-ring-color": step.active ? step.color : "transparent" } as React.CSSProperties}
                             >
                                 <Icon className="w-4 h-4" style={{ color: step.color }} />
                             </div>
